@@ -1,0 +1,24 @@
+# This file is used to create the kafka and zookeeper services using docker-compose
+version: "3"
+services:
+# zookieper service is used to maintain the kafka broker and topic information
+  zookeeper:
+    # image is the name of the docker image that we want to use
+    image: wurstmeister/zookeeper
+    # ports is the port mapping between the host and the container - host port is 2181 and container port is 2181
+    ports:
+      - "2181:2181"
+  kafka:
+    # wurstmeister/kafka is the name of the docker image that we want to use
+    image: wurstmeister/kafka
+    # ports is the port mapping between the host and the container - first port is the host port and second port is the container port
+    ports:
+      - "9092:9092"
+    # links is used to link the kafka service with the zookeeper service
+    environment:
+      # KAFKA_ADVERTISED_HOST_NAME is the host name of the kafka broker
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      # KAFKA_ADVERTISED_PORT is the port of the kafka broker
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # KAFKA_AUTO_CREATE_TOPICS_ENABLE false is used to disable the auto creation of topics which is enabled by default
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
